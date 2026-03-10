@@ -2,19 +2,29 @@
 <html>
 <head>
     <title>My Full Stack Tasker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Task List</h1>
-    <input type="text" id="taskInput" placeholder="Enter a task">
-    <button onclick="addTask()">Add Task</button>
-    <ul id="taskList"></ul>
+
+    <div class="container">
+        <h1>Task List</h1>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Enter a task">
+            <button onclick="addTask()">Add</button>
+        </div>
+
+        <ul id="taskList"></ul>
+    </div>
 
     <script>
         async function fetchTasks() {
             const res = await fetch('http://localhost:5000/tasks');
             const tasks = await res.json();
+
             const list = document.getElementById('taskList');
             list.innerHTML = '';
+
             tasks.forEach(t => {
                 list.innerHTML += `<li>${t.name}</li>`;
             });
@@ -22,16 +32,21 @@
 
         async function addTask() {
             const input = document.getElementById('taskInput');
+
             await fetch('http://localhost:5000/tasks', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ name: input.value })
             });
+
             input.value = '';
             fetchTasks();
         }
 
         fetchTasks();
     </script>
+
 </body>
 </html>
