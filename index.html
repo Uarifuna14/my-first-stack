@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Full Stack Tasker</title>
+</head>
+<body>
+    <h1>Task List</h1>
+    <input type="text" id="taskInput" placeholder="Enter a task">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+
+    <script>
+        async function fetchTasks() {
+            const res = await fetch('http://localhost:5000/tasks');
+            const tasks = await res.json();
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            tasks.forEach(t => {
+                list.innerHTML += `<li>${t.name}</li>`;
+            });
+        }
+
+        async function addTask() {
+            const input = document.getElementById('taskInput');
+            await fetch('http://localhost:5000/tasks', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ name: input.value })
+            });
+            input.value = '';
+            fetchTasks();
+        }
+
+        fetchTasks();
+    </script>
+</body>
+</html>
